@@ -5,236 +5,301 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Задание 4 - Валидация формы</title>
     <style>
+        /* ===== РОЗОВАЯ ТЕМА ===== */
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            padding: 40px 20px;
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #f5b0b0 0%, #f38181 50%, #e96479 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-        
-        .container {
+
+        .form-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            width: 100%;
             max-width: 550px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .form-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, #f38181 0%, #e96479 100%);
+            color: white;
+            padding: 30px 30px 25px;
+            text-align: center;
+        }
+
+        .form-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .form-body {
             padding: 30px;
         }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #4CAF50;
-        }
-        
-        .subtitle {
-            color: #666;
-            margin-bottom: 25px;
-            font-size: 14px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
-        }
-        
-        .required {
-            color: red;
-        }
-        
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        input[type="date"] {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        
-        /* Стиль для полей с ошибками - красная рамка */
-        .error-field {
-            border: 2px solid red !important;
-            background-color: #ffe6e6 !important;
-        }
-        
+
         /* Сообщения */
         .message {
-            padding: 12px;
-            margin-bottom: 15px;
-            border-radius: 5px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+            color: #1a5b2a;
+            border-left: 4px solid #2ecc71;
+        }
+
+        .message.error {
+            background: #fff5f5;
+            color: #c0392b;
+            border-left: 4px solid #e74c3c;
+        }
+
+        /* Группы полей */
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
             font-size: 14px;
         }
-        
-        .message.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+
+        .required {
+            color: #e96479;
+            margin-left: 4px;
         }
-        
-        .message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+
+        /* Поля ввода */
+        input:not([type="radio"]):not([type="submit"]),
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #ffe0e0;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            background: white;
+            font-family: inherit;
         }
-        
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #f38181;
+            box-shadow: 0 0 0 3px rgba(243, 129, 129, 0.15);
+        }
+
+        /* Стиль для полей с ошибками - красная рамка */
+        .error-field {
+            border: 2px solid #e74c3c !important;
+            background-color: #fff0f0 !important;
+        }
+
+        .error-field:focus {
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1) !important;
+        }
+
+        .help-text {
+            font-size: 11px;
+            color: #d4a5a5;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .help-text::before {
+            content: "🌸";
+            font-size: 11px;
+        }
+
         /* Радио кнопки */
         .radio-group {
             display: flex;
-            gap: 20px;
+            gap: 24px;
             padding: 8px 0;
         }
-        
-        .radio-group label {
+
+        .radio-option {
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-weight: normal;
+            gap: 8px;
             cursor: pointer;
+            padding: 8px 16px;
+            background: #fff5f5;
+            border-radius: 40px;
+            transition: all 0.2s;
         }
-        
-        .radio-group input {
-            width: auto;
+
+        .radio-option:hover {
+            background: #ffebeb;
+        }
+
+        .radio-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #f38181;
+        }
+
+        .radio-option label {
             margin: 0;
+            cursor: pointer;
+            font-weight: normal;
         }
-        
+
         /* Кнопка отправки */
-        button {
+        .submit-btn {
             width: 100%;
-            padding: 12px;
-            background-color: #4CAF50;
+            padding: 14px;
+            background: linear-gradient(135deg, #f38181 0%, #e96479 100%);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 40px;
             font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            font-family: inherit;
         }
-        
-        button:hover {
-            background-color: #45a049;
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(243, 129, 129, 0.5);
         }
-        
-        .help-text {
-            font-size: 12px;
-            color: #888;
-            margin-top: 5px;
-        }
-        
-        hr {
-            margin: 20px 0;
-            border: none;
-            border-top: 1px solid #eee;
-        }
-        
-        .info {
-            background: #e7f3ff;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            color: #0066cc;
-            text-align: center;
+
+        .submit-btn:active {
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📝 Задание 4</h1>
-        <div class="subtitle">Проверка заполнения полей формы с использованием Cookies</div>
+    <div class="form-card">
+        <div class="form-header">
+            <h1>🌸 Регистрационная форма</h1>
+            <p>Заполните все обязательные поля</p>
+        </div>
         
-        <!-- Вывод сообщений -->
-        <?php if (!empty($messages)): ?>
-            <div id="messages">
-                <?php foreach ($messages as $msg): ?>
-                    <?php echo $msg; ?>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-        
-        <!-- Форма -->
-        <form action="" method="POST">
-            <!-- Поле ФИО -->
-            <div class="form-group">
-                <label>ФИО <span class="required">*</span></label>
-                <input type="text" 
-                       name="fio" 
-                       value="<?php echo htmlspecialchars($values['fio']); ?>"
-                       <?php echo !empty($errors['fio']) ? 'class="error-field"' : ''; ?>
-                       placeholder="Иванов Иван Иванович">
-                <div class="help-text">Допустимы: буквы, пробелы, дефисы</div>
-            </div>
-            
-            <!-- Поле Email -->
-            <div class="form-group">
-                <label>Email <span class="required">*</span></label>
-                <input type="email" 
-                       name="email" 
-                       value="<?php echo htmlspecialchars($values['email']); ?>"
-                       <?php echo !empty($errors['email']) ? 'class="error-field"' : ''; ?>
-                       placeholder="user@example.com">
-                <div class="help-text">Формат: name@domain.com</div>
-            </div>
-            
-            <!-- Поле Телефон -->
-            <div class="form-group">
-                <label>Телефон <span class="required">*</span></label>
-                <input type="tel" 
-                       name="phone" 
-                       value="<?php echo htmlspecialchars($values['phone']); ?>"
-                       <?php echo !empty($errors['phone']) ? 'class="error-field"' : ''; ?>
-                       placeholder="+7 (123) 456-78-90">
-                <div class="help-text">Допустимы: цифры, +, -, (, ), пробелы</div>
-            </div>
-            
-            <!-- Поле Дата рождения -->
-            <div class="form-group">
-                <label>Дата рождения <span class="required">*</span></label>
-                <input type="date" 
-                       name="birthdate" 
-                       value="<?php echo htmlspecialchars($values['birthdate']); ?>"
-                       <?php echo !empty($errors['birthdate']) ? 'class="error-field"' : ''; ?>>
-                <div class="help-text">Формат: ГГГГ-ММ-ДД</div>
-            </div>
-            
-            <!-- Поле Пол -->
-            <div class="form-group">
-                <label>Пол <span class="required">*</span></label>
-                <div class="radio-group">
-                    <label>
-                        <input type="radio" name="gender" value="male" 
-                               <?php echo ($values['gender'] == 'male') ? 'checked' : ''; ?>
-                               <?php echo !empty($errors['gender']) ? 'class="error-field"' : ''; ?>>
-                        Мужской
-                    </label>
-                    <label>
-                        <input type="radio" name="gender" value="female" 
-                               <?php echo ($values['gender'] == 'female') ? 'checked' : ''; ?>
-                               <?php echo !empty($errors['gender']) ? 'class="error-field"' : ''; ?>>
-                        Женский
-                    </label>
+        <div class="form-body">
+            <?php if (!empty($messages)): ?>
+                <div id="messages">
+                    <?php foreach ($messages as $msg): ?>
+                        <?php echo $msg; ?>
+                    <?php endforeach; ?>
                 </div>
-            </div>
+            <?php endif; ?>
             
-            <button type="submit">Отправить форму</button>
-        </form>
-        
-        <hr>
-        <div class="info">
-            🔄 <strong>Cookies:</strong> При успешной отправке данные сохраняются на 1 год.<br>
-            ⚠️ <strong>При ошибках:</strong> Поля подсвечиваются красным, сообщения выводятся сверху.
+            <form action="" method="POST">
+                <!-- Поле ФИО -->
+                <div class="form-group">
+                    <label>ФИО <span class="required">*</span></label>
+                    <input type="text" 
+                           name="fio" 
+                           value="<?php echo htmlspecialchars($values['fio'] ?? ''); ?>"
+                           <?php echo !empty($errors['fio']) ? 'class="error-field"' : ''; ?>
+                           placeholder="Иванов Иван Иванович"
+                           autocomplete="off">
+                    <div class="help-text">Только буквы, пробелы и дефисы</div>
+                </div>
+                
+                <!-- Поле Email -->
+                <div class="form-group">
+                    <label>Email <span class="required">*</span></label>
+                    <input type="email" 
+                           name="email" 
+                           value="<?php echo htmlspecialchars($values['email'] ?? ''); ?>"
+                           <?php echo !empty($errors['email']) ? 'class="error-field"' : ''; ?>
+                           placeholder="user@example.com"
+                           autocomplete="off">
+                    <div class="help-text">Формат: name@domain.com</div>
+                </div>
+                
+                <!-- Поле Телефон -->
+                <div class="form-group">
+                    <label>Телефон <span class="required">*</span></label>
+                    <input type="tel" 
+                           name="phone" 
+                           value="<?php echo htmlspecialchars($values['phone'] ?? ''); ?>"
+                           <?php echo !empty($errors['phone']) ? 'class="error-field"' : ''; ?>
+                           placeholder="+7 (123) 456-78-90"
+                           autocomplete="off">
+                    <div class="help-text">Цифры, +, -, (, ), пробелы</div>
+                </div>
+                
+                <!-- Поле Дата рождения -->
+                <div class="form-group">
+                    <label>Дата рождения <span class="required">*</span></label>
+                    <input type="text" 
+                           name="birthdate" 
+                           value="<?php echo htmlspecialchars($values['birthdate'] ?? ''); ?>"
+                           <?php echo !empty($errors['birthdate']) ? 'class="error-field"' : ''; ?>
+                           placeholder="1990-01-01"
+                           autocomplete="off">
+                    <div class="help-text">Формат: ГГГГ-ММ-ДД (например, 1990-01-15)</div>
+                </div>
+                
+                <!-- Поле Пол -->
+                <div class="form-group">
+                    <label>Пол <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="gender" value="male" 
+                                   <?php echo (($values['gender'] ?? '') == 'male') ? 'checked' : ''; ?>
+                                   <?php echo !empty($errors['gender']) ? 'class="error-field"' : ''; ?>>
+                            👨 Мужской
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="gender" value="female" 
+                                   <?php echo (($values['gender'] ?? '') == 'female') ? 'checked' : ''; ?>
+                                   <?php echo !empty($errors['gender']) ? 'class="error-field"' : ''; ?>>
+                            👩 Женский
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">🌸 Отправить форму</button>
+            </form>
         </div>
     </div>
 </body>
